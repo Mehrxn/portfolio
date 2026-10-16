@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>MOHAMMED SHAKEEBUDDIN MEHRAN · PORTFOLIO</title>
+  <link rel="stylesheet" href="css/style.css?v=5">
+</head>
+
+<body data-screen="home">
+
+  <!-- Background art layers -->
+  <div id="bg" aria-hidden="true">
+    <div class="bg-layer" id="bg-stripes"></div>
+    <svg class="bg-star" style="left:6%;top:8%;width:26vmax;height:26vmax" viewBox="0 0 100 100">
+      <polygon points="50,0 60,35 98,35 68,57 78,94 50,72 22,94 32,57 2,35 40,35" fill="#000" />
+    </svg>
+    <svg class="bg-star s2" style="right:4%;bottom:6%;width:34vmax;height:34vmax" viewBox="0 0 100 100">
+      <polygon points="50,0 60,35 98,35 68,57 78,94 50,72 22,94 32,57 2,35 40,35" fill="#fff" />
+    </svg>
+    <!-- Per-screen menu artwork: assets/menus/<screen>.jpg
+       Each falls back to the CSS stripes if its file is missing -->
+    <!-- Home background video (looping) -->
+    <video class="menu-art" id="art-home" autoplay muted loop playsinline
+      onloadeddata="document.body.classList.add('has-art-home')">
+      <source src="assets/video/home.mp4" type="video/mp4">
+    </video>
+
+    <!-- Projects: No art element, shows normal #bg-stripes -->
+
+    <!-- Skills background image -->
+    <img class="menu-art" id="art-skills" src="assets/menus/skills.jpg" alt=""
+      onload="document.body.classList.add('has-art-skills')" onerror="this.remove()">
+
+    <!-- About background video (looping) -->
+    <video class="menu-art" id="art-about" autoplay muted loop playsinline
+      onloadeddata="document.body.classList.add('has-art-about')">
+      <source src="assets/video/about.mp4" type="video/mp4">
+    </video>
+
+    <!-- Contact background image -->
+    <img class="menu-art" id="art-contact" src="assets/menus/contact.jpg" alt=""
+      onload="document.body.classList.add('has-art-contact')" onerror="this.remove()">
+    <div class="bg-layer" id="bg-halftone"></div>
+    <div class="bg-layer" id="bg-vignette"></div>
+  </div>
+  <div id="slash" aria-hidden="true"></div>
+
+  <!-- Hero art: drop your file at assets/hero.png (transparent PNG looks best) -->
+  <img id="hero-art" src="assets/hero.png" alt="" onerror="this.remove()">
+
+  <!-- Screen transition wipe -->
+  <div id="wipe" aria-hidden="true">
+    <div class="pane p3"></div>
+    <div class="pane p2"></div>
+    <div class="pane p1"></div>
+    <div class="flash"></div>
+  </div>
+
+  <!-- Custom animated cursor + select sound -->
+  <div id="cursor" aria-hidden="true"></div>
+  <audio id="sfx-select" src="assets/sfx/select.mp3" preload="auto"></audio>
+  <audio id="bg-music" src="assets/sfx/music.mp3" loop preload="auto"></audio>
+  <button id="audio-toggle" aria-label="Turn audio on">🔇</button>
+
+
+
+
+  <div id="shell">
+    <div id="hud-top">
+      <div class="hud-tag">Portfolio // MEHRAN</div>
+      <div class="hud-tag alt">HYDERABAD · AI/ML ENGINEER</div>
+    </div>
+
+    <div id="stage">
+
+      <!-- HOME -->
+      <section class="screen active" id="screen-home" aria-label="Main menu">
+        <div id="intro-eyebrow">Take a look at my work</div>
+        <h1 id="big-name">
+          <span class="ransom" data-ransom=""></span>
+          <span class="ransom" data-ransom="MEHRAN"></span>
+        </h1>
+        <p id="tagline">
+          AI/ML Engineer with hands-on experience across computer vision, LLM agent systems,
+          and observability infrastructure.
+        </p>
+        <nav id="menu" aria-label="Sections">
+          <button class="menu-item sel" data-target="projects">
+            <span class="ransom" data-ransom="PROJECTS"></span><span class="cursor-mark">◀</span>
+          </button>
+          <button class="menu-item" data-target="skills">
+            <span class="ransom" data-ransom="SKILLS"></span><span class="cursor-mark">◀</span>
+          </button>
+          <button class="menu-item" data-target="about">
+            <span class="ransom" data-ransom="ABOUT"></span><span class="cursor-mark">◀</span>
+          </button>
+          <button class="menu-item" data-target="contact">
+            <span class="ransom" data-ransom="CONTACT"></span><span class="cursor-mark">◀</span>
+          </button>
+        </nav>
+      </section>
+
+      <!-- PROJECTS -->
+      <section class="screen sub" id="screen-projects" aria-label="Projects">
+        <div class="screen-head"><span class="ransom" data-ransom="PROJECTS"></span></div>
+        <button class="back-hint" data-back>ESC · Back</button>
+        <div id="feat-grid"></div>
+      </section>
+
+      <!-- SKILLS -->
+      <section class="screen sub" id="screen-skills" aria-label="Skills">
+        <div class="screen-head"><span class="ransom" data-ransom="SKILLS"></span></div>
+        <button class="back-hint" data-back>ESC · Back</button>
+        <div id="skills-body"></div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="screen sub align-right" id="screen-about" aria-label="About">
+
+        <div class="screen-head">
+          <span class="ransom" data-ransom="ABOUT"></span>
+        </div>
+
+        <button class="back-hint" data-back>ESC · Back</button>
+
+        <div class="paper">
+
+          <!-- Profile photo -->
+          <figure class="about-photo">
+            <img src="assets/me.jpg?v=2" alt="Mohammed Shakeebuddin Mehran"
+              onerror="this.closest('.about-photo').style.display='none'">
+            <figcaption>MEHRAN · HYDERABAD</figcaption>
+          </figure>
+
+          <!-- INTRODUCTION -->
+          <p class="quote">
+            I am an
+            <strong class="about-highlight">AI/ML Engineer</strong>
+            pursuing B.E. in Computer Science and Engineering (AI & ML) at
+            <strong class="about-highlight">Lords Institute of Engineering and Technology, Hyderabad</strong>
+            (2023 – 2027 · CGPA: 8.5/10.0), with hands-on experience in
+            <strong class="about-highlight">computer vision, autonomous LLM agent systems, and observability
+              infrastructure</strong>.
+          </p>
+
+          <br>
+
+          <!-- HIGHLIGHTS -->
+          <p>
+            Hackathon winner (<strong class="about-highlight">1st at HackAura</strong>, <strong
+              class="about-highlight">2nd at Quackathon</strong>) building autonomous LLM agents, MCP tooling, and
+            computer vision systems. Formerly Head of Media & Organizer for <strong
+              class="about-highlight">HackPrix</strong> and <strong class="about-highlight">ArtiGenz</strong>.
+          </p>
+
+          <br>
+
+          <!-- TOOLS -->
+          <p>
+            Key technologies I work with include
+            <strong class="about-highlight">Python, C, Java, SQL, Go, TypeScript, PyTorch, TensorFlow, scikit-learn,
+              OpenCV, YOLOv8, Model Context Protocol (MCP), LangChain, LangGraph, FastAPI, Django, Docker, Prometheus,
+              Grafana, Loki, Tempo, and Linux</strong>.
+          </p>
+
+          <br>
+
+          <!-- PERSONAL QUOTE -->
+          <p class="about-quote">
+            <strong>
+              “I Build.”
+            </strong>
+            <br>
+            — Mehran
+          </p>
+
+        </div>
+
+        <!-- CV BUTTON -->
+        <a class="cv-btn" href="assets/cv/Mohammed_Shakeebuddin_Mehran_Resume.pdf"
+          download="Mohammed_Shakeebuddin_Mehran_Resume.pdf">
+          <span>⬇ Download my CV (PDF)</span>
+        </a>
+
+      </section>
+      <!-- CONTACT -->
+      <section class="screen sub align-right" id="screen-contact" aria-label="Contact">
+        <div class="screen-head"><span class="ransom" data-ransom="CONTACT"></span></div>
+        <button class="back-hint" data-back>ESC · Back</button>
+        <div class="paper" style="max-width:620px">
+          <p>I'm open to <strong>AI/ML engineering, LLM agent development, and software engineering roles</strong>,
+            research collaborations, and ambitious projects. Drop me a message below or find me on any of these:</p>
+        </div>
+        <div class="contact-list">
+          <a class="contact-chip" href="mailto:u2shakeeb@gmail.com"><span>Email ✉</span></a>
+
+          <a class="contact-chip" href="https://github.com/Mehrxn" target="_blank" rel="noopener"><span>GitHub
+              ↗</span></a>
+
+          <a class="contact-chip" href="https://www.linkedin.com/in/mohammed-shakeebuddin-mehran-027149347"
+            target="_blank" rel="noopener"><span>LinkedIn ↗</span></a>
+
+          <a class="contact-chip" href="assets/cv/Mohammed_Shakeebuddin_Mehran_Resume.pdf"
+            download="Mohammed_Shakeebuddin_Mehran_Resume.pdf"><span>CV ⬇</span></a>
+        </div>
+
+        <!-- Message form — relayed to your inbox via formsubmit.co.
+           NOTE: the first-ever submission emails you a one-time activation link. -->
+        <form id="contact-form" class="paper" style="max-width:620px" novalidate>
+          <div class="form-head">Send me a message</div>
+          <label class="field">
+            <span>Name</span>
+            <input type="text" name="name" required maxlength="100" autocomplete="name">
+          </label>
+          <label class="field">
+            <span>Your email</span>
+            <input type="email" name="email" required maxlength="150" autocomplete="email">
+          </label>
+          <label class="field">
+            <span>Message</span>
+            <textarea name="message" required rows="5" maxlength="3000"></textarea>
+          </label>
+          <!-- honeypot: bots fill this, humans never see it -->
+          <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-5000px"
+            aria-hidden="true">
+          <div class="form-foot">
+            <button type="submit" class="cv-btn form-send"><span>Send it ➤</span></button>
+            <div id="form-status" role="status"></div>
+          </div>
+        </form>
+      </section>
+
+    </div>
+
+    <div id="hud-bottom">
+      <span><span class="key">↑↓</span>Select</span>
+      <span><span class="key">Enter</span>Confirm</span>
+      <span><span class="key">Esc</span>Back</span>
+      <span style="margin-left:auto;opacity:.8" id="clock"></span>
+    </div>
+  </div>
+
+  <!-- MVC: model = data, view = DOM, controller = events -->
+  <script src="js/model.js" defer></script>
+  <script src="js/view.js" defer></script>
+  <script src="js/controller.js" defer></script>
+</body>
+
+</html>
