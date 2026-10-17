@@ -22,8 +22,10 @@
     <!-- Per-screen menu artwork: assets/menus/<screen>.jpg
        Each falls back to the CSS stripes if its file is missing -->
     <!-- Home background video (looping) -->
-    <video class="menu-art" id="art-home" autoplay muted loop playsinline
-      onloadeddata="document.body.classList.add('has-art-home')">
+    <video class="menu-art" id="art-home" autoplay muted loop playsinline webkit-playsinline preload="auto"
+      onloadeddata="document.body.classList.add('has-art-home')"
+      oncanplay="document.body.classList.add('has-art-home')"
+      onplaying="document.body.classList.add('has-art-home')">
       <source src="assets/video/home_page.mp4" type="video/mp4">
     </video>
 
@@ -105,14 +107,14 @@
       <!-- PROJECTS -->
       <section class="screen sub" id="screen-projects" aria-label="Projects">
         <div class="screen-head"><span class="ransom" data-ransom="PROJECTS"></span></div>
-        <button class="back-hint" data-back>ESC · Back</button>
+        <button class="back-hint" data-back aria-label="Go back to home"><span class="back-arrow" aria-hidden="true">◀ </span><span class="back-text">ESC · Back</span></button>
         <div id="feat-grid"></div>
       </section>
 
       <!-- SKILLS -->
       <section class="screen sub" id="screen-skills" aria-label="Skills">
         <div class="screen-head"><span class="ransom" data-ransom="SKILLS"></span></div>
-        <button class="back-hint" data-back>ESC · Back</button>
+        <button class="back-hint" data-back aria-label="Go back to home"><span class="back-arrow" aria-hidden="true">◀ </span><span class="back-text">ESC · Back</span></button>
         <div id="skills-body"></div>
       </section>
 
@@ -123,7 +125,7 @@
           <span class="ransom" data-ransom="ABOUT"></span>
         </div>
 
-        <button class="back-hint" data-back>ESC · Back</button>
+        <button class="back-hint" data-back aria-label="Go back to home"><span class="back-arrow" aria-hidden="true">◀ </span><span class="back-text">ESC · Back</span></button>
 
         <div class="paper">
 
@@ -188,7 +190,7 @@
       <!-- CONTACT -->
       <section class="screen sub align-right" id="screen-contact" aria-label="Contact">
         <div class="screen-head"><span class="ransom" data-ransom="CONTACT"></span></div>
-        <button class="back-hint" data-back>ESC · Back</button>
+        <button class="back-hint" data-back aria-label="Go back to home"><span class="back-arrow" aria-hidden="true">◀ </span><span class="back-text">ESC · Back</span></button>
         <div class="paper" style="max-width:620px">
           <p>I'm open to <strong>AI/ML engineering, LLM agent development, and software engineering roles</strong>,
             research collaborations, and ambitious projects. Drop me a message below or find me on any of these:</p>

@@ -30,7 +30,47 @@ const View = {
     this.startClock();
     this.startParallax();
     this.startCursor();
+    this.initHomeVideo();
     document.body.classList.add("loaded");
+  },
+
+  /* ---------- Home Video Robust Initializer ---------- */
+  initHomeVideo() {
+    const v = document.getElementById("art-home");
+    if (!v) return;
+
+    v.muted = true;
+    v.defaultMuted = true;
+    v.playsInline = true;
+    v.setAttribute("playsinline", "");
+    v.setAttribute("webkit-playsinline", "");
+
+    const markLoaded = () => {
+      document.body.classList.add("has-art-home");
+    };
+
+    const markError = () => {
+      // Genuine video failure: keep/restore stripes fallback
+      document.body.classList.remove("has-art-home");
+      v.style.display = "none";
+    };
+
+    v.addEventListener("loadeddata", markLoaded);
+    v.addEventListener("canplay", markLoaded);
+    v.addEventListener("playing", markLoaded);
+    v.addEventListener("error", markError);
+
+    const src = v.querySelector("source");
+    if (src) src.addEventListener("error", markError);
+
+    if (v.readyState >= 2) {
+      markLoaded();
+    }
+
+    const p = v.play();
+    if (p && typeof p.then === "function") {
+      p.then(markLoaded).catch(() => {});
+    }
   },
 
   // Deterministic pseudo-random hash (so letters look the same every visit)

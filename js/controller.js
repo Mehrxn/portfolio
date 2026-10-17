@@ -8,13 +8,14 @@ const Controller = {
   audioUnlocked: false,
 
   init() {
-  View.init();
-  this.bindMenu();
-  this.bindKeyboard();
-  this.bindAudioUnlock();
-  this.bindAudioButton();
-  this.bindContactForm();
-},
+    View.init();
+    this.bindHistory();
+    this.bindMenu();
+    this.bindKeyboard();
+    this.bindAudioUnlock();
+    this.bindAudioButton();
+    this.bindContactForm();
+  },
 
   /* ---------- Contact form (relayed via formsubmit.co, mailto fallback) ---------- */
   bindContactForm() {
@@ -60,13 +61,20 @@ const Controller = {
     });
   },
 
-  /* ---------- Navigation ---------- */
-goTo(screen) { 
-  if (this.transitioning || screen === Model.state.screen) return; 
-  this.transitioning = true; 
-  this.play(); 
+  /* ---------- Navigation & History ---------- */
+  goTo(screen, pushState = true) { 
+    if (this.transitioning || screen === Model.state.screen) return; 
+    this.transitioning = true; 
+    this.play(); 
 
-  View.wipe( 
+    if (pushState) {
+      const url = screen === "home" ? (location.pathname + location.search) : `#${screen}`;
+      try {
+        history.pushState({ screen }, "", url);
+      } catch (_) {}
+    }
+
+    View.wipe( 
       () => {                       // mid-wipe: swap screens while covered
         Model.state.screen = screen;
         View.showScreen(screen);
@@ -75,6 +83,50 @@ goTo(screen) {
       },
       () => { this.transitioning = false; }
     );
+  },
+
+  goBack() {
+    if (Model.state.screen === "home") return;
+    if (history.state && history.state.screen === Model.state.screen && history.length > 1) {
+      history.back();
+    } else {
+      this.goTo("home", true);
+    }
+  },
+
+  bindHistory() {
+    const validScreens = ["home", "projects", "skills", "about", "contact"];
+    const hash = location.hash ? location.hash.slice(1).toLowerCase() : "";
+    const startScreen = validScreens.includes(hash) ? hash : "home";
+
+    try {
+      history.replaceState(
+        { screen: startScreen },
+        "",
+        location.hash || (startScreen === "home" ? location.pathname + location.search : `#${startScreen}`)
+      );
+    } catch (_) {}
+
+    if (startScreen !== "home") {
+      Model.state.screen = startScreen;
+      View.showScreen(startScreen);
+      if (startScreen === "projects") this.loadProjects();
+      if (startScreen === "skills") this.loadSkills();
+    }
+
+    window.addEventListener("popstate", e => {
+      const targetScreen = (e.state && e.state.screen) || (location.hash ? location.hash.slice(1).toLowerCase() : "home");
+      const screenToGo = validScreens.includes(targetScreen) ? targetScreen : "home";
+
+      if (screenToGo === Model.state.screen) return;
+
+      if (this.transitioning) {
+        setTimeout(() => this.goTo(screenToGo, false), 350);
+        return;
+      }
+
+      this.goTo(screenToGo, false);
+    });
   },
 
   select(index) {
@@ -98,7 +150,7 @@ goTo(screen) {
     View.animateSkillBars();
   },
 
-  /* ---------- Sound (browsers block audio until first user gesture) ---------- */
+  /* ---------- Sound & Mobile Playback Kickstart ---------- */
   play() {
     if (this.audioUnlocked) View.playSelect();
   },
@@ -109,7 +161,7 @@ goTo(screen) {
 
       const music = document.getElementById("bg-music");
       const button = document.getElementById("audio-toggle");
-      const video = document.getElementById("home-video");
+      const homeArt = document.getElementById("art-home");
 
       if (music && music.paused) {
         music.volume = 0.4;
@@ -123,21 +175,23 @@ goTo(screen) {
         });
       }
 
-      if (video) {
-        video.muted = false;
-        video.volume = 0.5;
-        video.play().catch(() => {});
+      // Ensure home background video starts if mobile browser blocked initial autoplay
+      if (homeArt && homeArt.paused) {
+        homeArt.muted = true;
+        homeArt.play().then(() => {
+          document.body.classList.add("has-art-home");
+        }).catch(() => {});
       }
     };
 
     addEventListener("pointerdown", unlock, { once: true, capture: true });
+    addEventListener("touchstart", unlock, { once: true, capture: true });
     addEventListener("keydown", unlock, { once: true, capture: true });
   },
 
   bindAudioButton() {
     const button = document.getElementById("audio-toggle");
     const music = document.getElementById("bg-music");
-    const video = document.getElementById("home-video");
 
     if (!button) return;
 
@@ -156,11 +210,6 @@ goTo(screen) {
           music.volume = 0.4;
           music.play().catch(() => {});
         }
-        if (video) {
-          video.muted = false;
-          video.volume = 0.5;
-          video.play().catch(() => {});
-        }
       } else {
         button.textContent = "🔇";
         button.setAttribute("aria-label", "Turn audio on");
@@ -168,9 +217,6 @@ goTo(screen) {
         if (music) {
           music.pause();
           music.muted = true;
-        }
-        if (video) {
-          video.muted = true;
         }
       }
     });
@@ -184,11 +230,11 @@ goTo(screen) {
     });
 
     document.querySelectorAll("[data-back]").forEach(b =>
-      b.addEventListener("click", () => this.goTo("home")));
+      b.addEventListener("click", () => this.goBack()));
 
-    // Clicking the name always takes you home
+    // Clicking the name takes you back if in a sub-screen
     document.getElementById("big-name").addEventListener("click", () => {
-      if (Model.state.screen !== "home") this.goTo("home");
+      if (Model.state.screen !== "home") this.goBack();
       else this.play();
     });
   },
@@ -202,7 +248,7 @@ goTo(screen) {
           this.goTo(View.els.menuItems[Model.state.menuIndex].dataset.target);
         }
       } else if (e.key === "Escape") {
-        this.goTo("home");
+        this.goBack();
       }
     });
   },
